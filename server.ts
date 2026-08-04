@@ -48,7 +48,7 @@ app.post("/api/gemini/chat", async (req, res) => {
     })) : [];
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: [...chatHistory, { role: "user", parts: [{ text: message }] }],
       config: {
         systemInstruction,
@@ -76,122 +76,55 @@ app.post("/api/gemini/chat", async (req, res) => {
       customAnswer = `ในอนาคต **ทักษะด้าน AI** จะมีประโยชน์ในทุกอาชีพเลยจ้ะ ไม่ว่าจะเป็น Prompt Engineer (นักออกแบบคำสั่ง), AI Ethics Specialist (ผู้ตรวจสอบจริยธรรม AI) หรือ Data Scientist (นักวิทยาศาสตร์ข้อมูล) เรียนรู้ตั้งแต่วันนี้รับรองได้เปรียบแน่นอน!`;
     }
 
+    const errorMessage = error.message ? `\n\n⚠️ (ข้อผิดพลาดของ API: ${error.message})` : "";
     return res.json({
-      text: `💡 **[โหมดความรู้จำลองแบบออฟไลน์]** สวัสดีจ้ะครูคือ AI Mentor นะ! ตอนนี้ระบบเชื่อมต่อกำลังประหยัดพลังงานหรือพบข้อจำกัดทางเทคนิคชั่วคราว ครูจึงทำงานในโหมดเรียนรู้ด้วยตัวเองแบบออฟไลน์จ้ะ 🤖\n\n${customAnswer}\n\n*ต้องการเชื่อมต่อเซสชันเต็มรูปแบบ? ตั้งค่ารหัสผ่านลับ (GEMINI_API_KEY) ในแผงความลับและตรวจสอบโควตาบัญชีของเธอได้ตลอดเวลานะจ้ะ!* ❤️`
+      text: `💡 **[โหมดความรู้จำลองแบบออฟไลน์]** สวัสดีจ้ะครูคือ AI Mentor นะ! ตอนนี้ระบบเชื่อมต่อกำลังประหยัดพลังงานหรือพบข้อจำกัดทางเทคนิคชั่วคราว ครูจึงทำงานในโหมดเรียนรู้ด้วยตัวเองแบบออฟไลน์จ้ะ 🤖\n\n${customAnswer}\n\n*ต้องการเชื่อมต่อเซสชันเต็มรูปแบบ? ตั้งค่ารหัสผ่านลับ (GEMINI_API_KEY) ในแผงความลับและตรวจสอบโควตาบัญชีของเธอได้ตลอดเวลานะจ้ะ!* ❤️${errorMessage}`
     });
   }
 });
 
-// Prompt Playground evaluator API
-app.post("/api/gemini/evaluate-prompt", async (req, res) => {
-  const { prompt } = req.body;
-  if (!prompt) {
-    return res.status(400).json({ error: "กรุณาระบุ prompt" });
-  }
-
-  try {
-    const ai = getGemini();
-    const evaluationPrompt = `ในฐานะผู้เชี่ยวชาญด้าน Prompt Engineering ช่วยประเมินและวิเคราะห์ Prompt นี้สำหรับนักเรียน:
-"${prompt}"
-
-กรุณาตอบกลับในรูปแบบ JSON ที่มีโครงสร้างดังนี้ (ห้ามพิมพ์ข้อความอื่นนอกจาก JSON):
-{
-  "score": 85, // คะแนนเต็ม 100
-  "rating": "ดีมาก / ปรับปรุงได้ / ยอดเยี่ยม",
-  "explanation": "อธิบายว่าทำไม prompt นี้จึงได้คะแนนเท่านี้ในเชิงบวกสำหรับนักเรียน",
-  "strengths": ["จุดเด่นข้อที่ 1", "จุดเด่นข้อที่ 2"],
-  "weaknesses": ["จุดที่ควรระวังหรือปรับปรุงข้อที่ 1"],
-  "improvedPrompt": "ข้อเสนอแนะ prompt ที่ปรับปรุงแล้วเพื่อให้ได้ผลลัพธ์ที่ดีขึ้นและมีประสิทธิภาพยิ่งขึ้น",
-  "learningTips": "คำแนะนำสั้นๆ สำหรับเด็กในการเขียน Prompt ในอนาคต"
-}`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: evaluationPrompt,
-      config: {
-        responseMimeType: "application/json",
-        temperature: 0.3,
-      }
-    });
-
-    try {
-      const parsed = JSON.parse(response.text?.trim() || "{}");
-      res.json(parsed);
-    } catch {
-      res.json({
-        score: 70,
-        rating: "ประเมินผลสำเร็จ",
-        explanation: "ได้รับคำตอบแต่การจัดรูปแบบผิดพลาด โครงสร้างคำสั่งสั้นเกินไปหรือยังขาดรายละเอียด",
-        strengths: ["พิมพ์อ่านเข้าใจได้ง่าย"],
-        weaknesses: ["ยังไม่ระบุบทบาทของ AI ที่ชัดเจน และขาดข้อมูลบริบท"],
-        improvedPrompt: `จงรับบทเป็นผู้ช่วยอัจฉริยะ ช่วยอธิบายเกี่ยวกับ "${prompt}" แบบสั้นๆ และเปรียบเทียบให้เห็นภาพชัดเจน`,
-        learningTips: "เคล็ดลับ: การกำหนดบทบาท (Role) และผลลัพธ์ที่ต้องการ (Format) จะช่วยให้ AI ตอบได้ตรงใจขึ้นนะ!"
-      });
-    }
-  } catch (error: any) {
-    console.error("Evaluate Prompt Error:", error);
-    const score = Math.min(100, Math.max(30, (prompt || "").length * 3 + 15));
-    let rating = "ควรปรับปรุง";
-    if (score > 80) rating = "ยอดเยี่ยม";
-    else if (score > 60) rating = "ดีพอใช้";
-
-    return res.json({
-      score,
-      rating,
-      explanation: "💡 [โหมดสาธิตออฟไลน์] prompt ของเธอมีขนาดยาวประมาณ " + (prompt || "").length + " ตัวอักษร ซึ่งดีในการให้บริบท แต่ยังสามารถปรับแต่งให้ชัดเจนและมีประสิทธิภาพยิ่งขึ้นได้โดยใช้วิธีการเขียนที่ถูกต้อง",
-      strengths: [
-        (prompt || "").length > 20 ? "ให้หัวข้อหรือคีย์เวิร์ดที่เฉพาะเจาะจงได้ดี" : "สั้นกระชับเข้าใจง่าย ไม่สับสน"
-      ],
-      weaknesses: [
-        "ยังขาดการระบุบริบท (Context) หรือจุดมุ่งหมายของผู้รับชมที่ชัดเจน",
-        "ไม่มีการกำหนดข้อจำกัดหรือรูปแบบการแสดงผล (Output Formats)"
-      ],
-      improvedPrompt: `จงรับบทเป็นครูใจดี ช่วยอธิบายวิวัฒนาการของ "${prompt}" ให้กับเด็กวัยเรียนเข้าใจง่ายที่สุด พร้อมยกตัวอย่างเปรียบเทียบในชีวิตประจำวัน 3 ข้อ`,
-      learningTips: "เคล็ดลับของปรมาจารย์: เขียนคำสั่งที่ดีต้องยึดหลัก 4S ได้แก่ State Role (กำหนดบทบาท), Specify Task (ระบุงาน), Set Context (บอกข้อมูลแวดล้อม), และ Shape Output (เลือกรูปแบบคำตอบ)!"
-    });
-  }
-});
-
-// AI Image Generator Demo API using gemini-3.1-flash-lite-image
+// AI Image Generator API
 app.post("/api/gemini/generate-image", async (req, res) => {
-  const { prompt } = req.body;
+  const { prompt, model } = req.body;
   if (!prompt) {
     return res.status(400).json({ error: "กรุณาระบุคำสั่งสร้างรูปภาพ" });
   }
 
   try {
+    if (model === "chatgpt" || model === "claude") {
+       throw new Error(`MODEL_NOT_SUPPORTED_OFFLINE_MOCK: ${model}`);
+    }
+
     const ai = getGemini();
-    const response = await ai.models.generateContent({
-      model: "gemini-3.1-flash-lite-image",
-      contents: {
-        parts: [
-          { text: `Create a bright, high-quality, friendly educational cartoon vector illustration or educational render about: ${prompt}. Chemically colored, neat, safe for children, 3d style or simple icon.` }
-        ]
-      },
+    const response = await ai.models.generateImages({
+      model: "imagen-3.0-generate-002",
+      prompt: `Create a bright, high-quality, friendly educational cartoon vector illustration or educational render about: ${prompt}. Chemically colored, neat, safe for children, 3d style or simple icon.`,
       config: {
-        imageConfig: {
-          aspectRatio: "1:1"
-        }
+        numberOfImages: 1,
+        aspectRatio: "1:1",
+        outputMimeType: "image/jpeg"
       }
     });
 
     let base64Image = "";
-    for (const part of response.candidates?.[0]?.content?.parts || []) {
-      if (part.inlineData) {
-        base64Image = part.inlineData.data;
-        break;
-      }
+    if (response.generatedImages && response.generatedImages.length > 0) {
+      base64Image = response.generatedImages[0].image.imageBytes;
     }
 
     if (base64Image) {
-      res.json({ imageUrl: `data:image/png;base64,${base64Image}` });
+      res.json({ imageUrl: `data:image/jpeg;base64,${base64Image}` });
     } else {
       throw new Error("NO_IMAGE_DATA");
     }
   } catch (error: any) {
     console.error("Generate Image Error:", error);
-    // Safe educational fallbacks
-    // Rather than showing a broken link, we can use an educational SVG illustration themed around AI
+    
+    // Check if it's a mock error for other models
+    const isMock = error.message?.includes("MODEL_NOT_SUPPORTED_OFFLINE_MOCK");
+    let modelName = "AI";
+    if (model === "chatgpt") modelName = "ChatGPT (DALL-E)";
+    else if (model === "claude") modelName = "Claude";
+    
     const fallbackSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
       <rect width="400" height="400" fill="#eff4ff" rx="24"/>
       <circle cx="200" cy="180" r="70" fill="#004ac6" opacity="0.1"/>
@@ -205,14 +138,20 @@ app.post("/api/gemini/generate-image", async (req, res) => {
       <circle cx="157" cy="223" r="10" fill="#4ae176"/>
       <circle cx="243" cy="223" r="10" fill="#ba1a1a"/>
       <rect x="100" y="280" width="200" height="40" rx="10" fill="#ffffff" stroke="#c3c6d7" stroke-width="1"/>
-      <text x="200" y="305" font-family="Prompt, sans-serif" font-size="14" font-weight="bold" fill="#004ac6" text-anchor="middle">🎨 AI Drawing: ${prompt.substring(0, 15)}${prompt.length > 15 ? '...' : ''}</text>
-      <text x="200" y="350" font-family="Prompt, sans-serif" font-size="11" fill="#737686" text-anchor="middle">โหมดออฟไลน์: ภาพโครงข่ายประสาทจำลองอัจฉริยะ</text>
+      <text x="200" y="305" font-family="Prompt, sans-serif" font-size="14" font-weight="bold" fill="#004ac6" text-anchor="middle">🎨 ${modelName}: ${prompt.substring(0, 15)}${prompt.length > 15 ? '...' : ''}</text>
+      <text x="200" y="350" font-family="Prompt, sans-serif" font-size="11" fill="#737686" text-anchor="middle">โหมดออฟไลน์: ภาพจำลองจาก ${modelName}</text>
     </svg>`;
     const base64Svg = Buffer.from(fallbackSvg).toString("base64");
+    
+    let tip = "ตั้งค่า GEMINI_API_KEY ในแผงความลับเพื่อรับรูปภาพจาก AI ตัวจริง!";
+    if (isMock) {
+        tip = `ทดลองวาดจาก ${modelName} สำเร็จในโหมดจำลอง! (หากใช้จริงต้องใช้ API Key ของ ${modelName})`;
+    }
+    
     res.json({
       imageUrl: `data:image/svg+xml;base64,${base64Svg}`,
       offline: true,
-      tip: "ตั้งค่า GEMINI_API_KEY ในแผงความลับเพื่อรับรูปภาพจาก AI ตัวจริง!"
+      tip: tip
     });
   }
 });
@@ -237,7 +176,7 @@ app.post("/api/gemini/sentiment", async (req, res) => {
 }`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: `จงวิเคราะห์ข้อความนี้: "${text}"`,
       config: {
         systemInstruction,
@@ -285,7 +224,7 @@ app.post("/api/gemini/sentiment", async (req, res) => {
   }
 });
 
-// Image Classification / Vision Demo using gemini-3.5-flash
+// Image Classification / Vision Demo using gemini-2.5-flash
 app.post("/api/gemini/classify-image", async (req, res) => {
   const { imageBase64, mimeType } = req.body;
   if (!imageBase64) {
@@ -315,7 +254,7 @@ app.post("/api/gemini/classify-image", async (req, res) => {
     };
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: [imagePart, textPart],
       config: {
         systemInstruction,
