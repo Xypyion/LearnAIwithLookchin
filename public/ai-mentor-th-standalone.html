@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Mentor TH — Portable Offline Standalone Edition</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Sarabun', 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .heading-font {
+      font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #certificate-modal-content, #certificate-modal-content * {
+        visibility: visible;
+      }
+      #certificate-modal-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="showTab('home')">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+          AI
+        </div>
+        <div>
+          <span class="heading-font text-base md:text-lg font-bold text-slate-900 tracking-tight">
+            AI MENTOR <span class="text-blue-600">TH</span>
+          </span>
+          <span class="hidden sm:inline-block ml-2 text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded-full">Offline Edition</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex gap-6 text-sm font-medium h-full items-center">
+        <button onclick="showTab('home')" id="nav-home" class="nav-link text-blue-600 border-b-2 border-blue-600 font-bold h-full px-1 flex items-center">หน้าแรก</button>
+        <button onclick="showTab('learn')" id="nav-learn" class="nav-link text-slate-600 hover:text-blue-600 h-full px-1 flex items-center">เรียนรู้ AI</button>
+        <button onclick="showTab('lab')" id="nav-lab" class="nav-link text-slate-600 hover:text-blue-600 h-full px-1 flex items-center">ห้องทดลอง AI</button>
+        <button onclick="showTab('quiz')" id="nav-quiz" class="nav-link text-slate-600 hover:text-blue-600 h-full px-1 flex items-center">ควิซ & เกียรติบัตร</button>
+        <button onclick="showTab('ethics')" id="nav-ethics" class="nav-link text-slate-600 hover:text-blue-600 h-full px-1 flex items-center">จริยธรรม AI</button>
+        <button onclick="showTab('dict')" id="nav-dict" class="nav-link text-slate-600 hover:text-blue-600 h-full px-1 flex items-center">พจนานุกรม</button>
+        <button onclick="showTab('careers')" id="nav-careers" class="nav-link text-slate-600 hover:text-blue-600 h-full px-1 flex items-center">ส่องอาชีพ</button>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button onclick="window.print()" class="hidden sm:inline-flex px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition-colors">
+          🖨️ พิมพ์เอกสาร
+        </button>
+        <button onclick="showTab('quiz')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-semibold rounded-full shadow-sm transition-colors">
+          เริ่มทำควิซ
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav Sub-bar -->
+  <div class="md:hidden bg-white border-b border-slate-200 px-4 py-2 overflow-x-auto flex gap-4 text-xs font-medium text-slate-600 whitespace-nowrap">
+    <button onclick="showTab('home')" class="py-1 px-2 rounded bg-blue-50 text-blue-600 font-bold">หน้าแรก</button>
+    <button onclick="showTab('learn')" class="py-1 px-2">เรียนรู้ AI</button>
+    <button onclick="showTab('lab')" class="py-1 px-2">ห้องทดลอง AI</button>
+    <button onclick="showTab('quiz')" class="py-1 px-2">ควิซ</button>
+    <button onclick="showTab('ethics')" class="py-1 px-2">จริยธรรม</button>
+    <button onclick="showTab('dict')" class="py-1 px-2">พจนานุกรม</button>
+    <button onclick="showTab('careers')" class="py-1 px-2">อาชีพ</button>
+  </div>
+
+  <!-- Main Content Stage -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-8">
+
+    <!-- TAB 1: HOME -->
+    <div id="tab-home" class="tab-content flex flex-col gap-8">
+      <!-- Hero Section -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div class="lg:col-span-7 flex flex-col justify-center bg-white border border-slate-200 p-8 md:p-12 rounded-3xl shadow-sm">
+          <span class="inline-block w-fit px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
+            Education Thailand 🇹🇭 (Offline Standalone)
+          </span>
+          <h1 class="heading-font text-4xl md:text-5xl font-extrabold leading-[1.1] text-slate-900 mb-6">
+            Learn Artificial Intelligence <span class="text-blue-600">Today.</span>
+          </h1>
+          <p class="text-base md:text-lg text-slate-600 mb-8 max-w-lg leading-relaxed">
+            สื่อการเรียนรู้ปัญญาประดิษฐ์ฉบับพกพาแบบออฟไลน์ สำหรับเยาวชนไทย สนุกกับบทเรียน ควิซวัดความรู้ และห้องทดลองสมองกลโดยไม่ต้องต่ออินเทอร์เน็ต!
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <button onclick="showTab('learn')" class="px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-200 transition-all">
+              เริ่มเรียนรู้บทเรียน (Start)
+            </button>
+            <button onclick="showTab('quiz')" class="px-6 py-4 bg-white border border-slate-200 text-slate-800 rounded-2xl font-bold text-base shadow-sm hover:bg-slate-50 transition-all">
+              ทดสอบความรู้ (Quiz)
+            </button>
+          </div>
+        </div>
+
+        <!-- Featured Learning Cards -->
+        <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div onclick="showTab('learn'); selectLesson('what-is-ai');" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-blue-400 cursor-pointer transition-all">
+            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-xl mb-4">💡</div>
+            <div>
+              <h3 class="font-bold text-lg text-slate-900">What is AI?</h3>
+              <p class="text-xs text-slate-500 mt-1">ปูพื้นฐานปัญญาประดิษฐ์ง่ายๆ</p>
+            </div>
+          </div>
+          <div onclick="showTab('learn'); selectLesson('machine-learning');" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-blue-400 cursor-pointer transition-all">
+            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center text-xl mb-4">⚡</div>
+            <div>
+              <h3 class="font-bold text-lg text-slate-900">ML Basics</h3>
+              <p class="text-xs text-slate-500 mt-1">สมองกลเรียนรู้ได้อย่างไร</p>
+            </div>
+          </div>
+          <div onclick="showTab('ethics')" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-blue-400 cursor-pointer transition-all">
+            <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-xl mb-4">🛡️</div>
+            <div>
+              <h3 class="font-bold text-lg text-slate-900">AI Ethics</h3>
+              <p class="text-xs text-slate-500 mt-1">จริยธรรมและการใช้งานปลอดภัย</p>
+            </div>
+          </div>
+          <div onclick="showTab('quiz')" class="bg-blue-600 p-6 rounded-3xl text-white shadow-sm flex flex-col justify-between hover:bg-blue-700 cursor-pointer transition-all">
+            <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center font-black text-lg">100%</div>
+            <div>
+              <h3 class="font-bold text-lg">ควิซชิงเกียรติบัตร</h3>
+              <p class="text-xs opacity-80 mt-1">ทดสอบความรู้และรับวุฒิบัตร</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Daily Fact Bar -->
+      <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col md:flex-row items-center gap-6">
+        <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl shrink-0">🤖</div>
+        <div class="flex-1">
+          <p class="text-xs uppercase font-bold text-blue-600 tracking-wider">เกร็ดน่ารู้ AI รายวัน (Daily AI Fact)</p>
+          <p class="text-sm font-medium text-slate-700 mt-1" id="daily-fact-text">
+            ระบบแนะนำวิดีโอบน YouTube และฟีดบน TikTok ใช้ AI แบบ Recommendation Engine ประมวลผลพฤติกรรมผู้ใช้มากกว่า 1 พันล้านครั้งต่อวัน!
+          </p>
+        </div>
+        <button onclick="nextDailyFact()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl shrink-0 transition-colors">
+          สุ่มเกร็ดความรู้ใหม่ 🔄
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 2: LEARN AI -->
+    <div id="tab-learn" class="tab-content hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-4 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col gap-3">
+        <h2 class="font-bold text-xl text-slate-900 mb-2">บทเรียน AI ทั้งหมด</h2>
+        <div onclick="selectLesson('what-is-ai')" id="lesson-btn-what-is-ai" class="lesson-item-btn p-4 rounded-2xl border border-blue-600 bg-blue-50 text-blue-900 cursor-pointer font-bold transition-all">
+          1. AI คืออะไร? (What is AI?)
+        </div>
+        <div onclick="selectLesson('machine-learning')" id="lesson-btn-machine-learning" class="lesson-item-btn p-4 rounded-2xl border border-slate-200 hover:border-blue-400 cursor-pointer font-semibold transition-all">
+          2. การเรียนรู้ของเครื่อง (Machine Learning)
+        </div>
+        <div onclick="selectLesson('generative-ai')" id="lesson-btn-generative-ai" class="lesson-item-btn p-4 rounded-2xl border border-slate-200 hover:border-blue-400 cursor-pointer font-semibold transition-all">
+          3. Generative AI & Prompt Engineering
+        </div>
+        <div onclick="selectLesson('ai-ethics')" id="lesson-btn-ai-ethics" class="lesson-item-btn p-4 rounded-2xl border border-slate-200 hover:border-blue-400 cursor-pointer font-semibold transition-all">
+          4. จริยธรรมและภัยคุกคาม AI
+        </div>
+      </div>
+
+      <div class="lg:col-span-8 bg-white border border-slate-200 rounded-3xl p-8 shadow-sm" id="lesson-content-area">
+        <!-- Lesson Content Rendered Dynamically -->
+      </div>
+    </div>
+
+    <!-- TAB 3: AI LAB -->
+    <div id="tab-lab" class="tab-content hidden flex flex-col gap-8">
+      <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+        <h2 class="font-bold text-2xl text-slate-900 mb-2">🧪 ห้องทดลองปัญญาประดิษฐ์ (AI Sandbox)</h2>
+        <p class="text-slate-600 text-sm mb-6">ทดลองใช้งานเครื่องมือจำลอง AI ในโหมดออฟไลน์แบบพกพา</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Prompt Evaluator -->
+          <div class="border border-slate-200 rounded-2xl p-6 flex flex-col gap-4 bg-slate-50">
+            <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+              <span>✍️</span> ประเมินประสิทธิภาพ Prompt
+            </h3>
+            <p class="text-xs text-slate-600">พิมพ์คำสั่งที่อยากสั่ง AI แล้วกดวิเคราะห์คะแนนความสมบูรณ์ตามหลัก 4S</p>
+            <textarea id="prompt-input" rows="3" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white" placeholder="เช่น: จงอธิบายเรื่อง AI ให้เด็กประถมฟังเข้าใจง่าย"></textarea>
+            <button onclick="evaluatePromptOffline()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition-all">
+              วิเคราะห์คำสั่ง (Evaluate Prompt)
+            </button>
+            <div id="prompt-result" class="hidden p-4 bg-white rounded-xl border border-slate-200 text-xs flex flex-col gap-2"></div>
+          </div>
+
+          <!-- Sentiment Analyzer -->
+          <div class="border border-slate-200 rounded-2xl p-6 flex flex-col gap-4 bg-slate-50">
+            <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+              <span>🎭</span> ตรวจจับอารมณ์ข้อความ (Sentiment AI)
+            </h3>
+            <p class="text-xs text-slate-600">ทดลองให้ AI วิเคราะห์ว่าข้อความสอดคล้องกับอารมณ์ บวก ลบ หรือ เป็นกลาง</p>
+            <input type="text" id="sentiment-input" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white" placeholder="เช่น: วันนี้เรียน AI สนุกและได้ความรู้เยอะมากเลย">
+            <button onclick="analyzeSentimentOffline()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm rounded-xl transition-all">
+              วิเคราะห์อารมณ์ข้อความ
+            </button>
+            <div id="sentiment-result" class="hidden p-4 bg-white rounded-xl border border-slate-200 text-xs flex flex-col gap-2"></div>
+          </div>
+        </div>
+
+        <!-- Offline AI Mentor Chat -->
+        <div class="mt-8 border border-slate-200 rounded-2xl p-6 bg-slate-50 flex flex-col gap-4">
+          <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+            <span>🤖</span> แชทพูดคุยกับ AI Mentor (Offline Smart Bot)
+          </h3>
+          <div id="chat-box" class="h-64 overflow-y-auto bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-3 text-sm">
+            <div class="bg-blue-50 text-blue-900 p-3 rounded-xl max-w-md self-start border border-blue-100">
+              สวัสดีจ้ะครูคือ AI Mentor ในโหมดออฟไลน์นะ! เธอสามารถสอบถามเรื่อง AI, Machine Learning, จริยธรรม หรืออาชีพในสายงานคอมพิวเตอร์ได้เลยจ้ะ 🤖
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="chat-input" onkeypress="if(event.key==='Enter') sendOfflineMessage()" class="flex-1 p-3 border border-slate-300 rounded-xl text-sm bg-white" placeholder="ถามคำถามเรื่อง AI ที่นี่... (กด Enter เพื่อส่ง)">
+            <button onclick="sendOfflineMessage()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl">ส่งคำถาม</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: QUIZ CENTER & CERTIFICATE -->
+    <div id="tab-quiz" class="tab-content hidden bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <div id="quiz-intro" class="flex flex-col items-center text-center max-w-xl mx-auto py-8">
+        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-3xl mb-4">🏆</div>
+        <h2 class="font-bold text-3xl text-slate-900 mb-2">ควิซวัดความรู้ AI & รับเกียรติบัตร</h2>
+        <p class="text-slate-600 text-sm mb-6">ตอบคำถาม 5 ข้อเพื่อทดสอบความรู้ หากสอบผ่านเกิน 60% รับวุฒิบัตรอิเล็กทรอนิกส์ได้ทันที!</p>
+        <div class="w-full text-left mb-6">
+          <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อ-นามสกุลของคุณ (สำหรับแสดงบนเกียรติบัตร):</label>
+          <input type="text" id="student-name" value="นักเรียนผู้ทรงปัญญา" class="w-full p-3 border border-slate-300 rounded-xl text-sm">
+        </div>
+        <button onclick="startQuiz()" class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-200 transition-all">
+          เริ่มทำควิซวัดความรู้ 🚀
+        </button>
+      </div>
+
+      <div id="quiz-active" class="hidden max-w-2xl mx-auto flex flex-col gap-6">
+        <div class="flex justify-between items-center text-sm font-bold text-slate-600">
+          <span id="quiz-progress-text">ข้อที่ 1 / 5</span>
+          <span id="quiz-score-live" class="text-blue-600">คะแนน: 0</span>
+        </div>
+        <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div id="quiz-progress-bar" class="h-full bg-blue-600 transition-all duration-300" style="width: 20%;"></div>
+        </div>
+        <div class="p-6 border border-slate-200 rounded-2xl bg-slate-50">
+          <h3 class="font-bold text-lg text-slate-900 mb-4" id="quiz-question-title"></h3>
+          <div id="quiz-options-container" class="flex flex-col gap-3"></div>
+        </div>
+      </div>
+
+      <div id="quiz-result" class="hidden max-w-xl mx-auto text-center py-8 flex flex-col items-center gap-6">
+        <div id="quiz-result-icon" class="text-6xl">🎉</div>
+        <h2 class="font-bold text-3xl text-slate-900" id="quiz-result-heading"></h2>
+        <p class="text-slate-600 text-base" id="quiz-result-detail"></p>
+        <div class="flex gap-4">
+          <button onclick="startQuiz()" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-sm">
+            ลองทำใหม่อีกครั้ง 🔄
+          </button>
+          <button onclick="printCertificate()" id="btn-cert" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm shadow-md">
+            ดูและพิมพ์เกียรติบัตร 📜
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: ETHICS -->
+    <div id="tab-ethics" class="tab-content hidden bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="font-bold text-2xl text-slate-900 mb-2">🛡️ สถานการณ์จำลองจริยธรรม AI (AI Ethics Simulator)</h2>
+      <p class="text-slate-600 text-sm mb-6">ลองตัดสินใจในสถานการณ์ท้าทายเพื่อเรียนรู้ผลกระทบของการใช้ปัญญาประดิษฐ์</p>
+      <div id="ethics-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+
+    <!-- TAB 6: DICTIONARY -->
+    <div id="tab-dict" class="tab-content hidden bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div>
+          <h2 class="font-bold text-2xl text-slate-900">📖 พจนานุกรมคำศัพท์ AI (AI Glossary)</h2>
+          <p class="text-slate-600 text-sm mt-1">รวบรวมคำศัพท์สำคัญในวงการปัญญาประดิษฐ์พร้อมคำอธิบายภาษาไทย</p>
+        </div>
+        <input type="text" id="dict-search" oninput="filterDict()" placeholder="ค้นหาคำศัพท์..." class="p-3 border border-slate-300 rounded-xl text-sm w-full sm:w-64">
+      </div>
+      <div id="dict-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+
+    <!-- TAB 7: CAREERS -->
+    <div id="tab-careers" class="tab-content hidden bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="font-bold text-2xl text-slate-900 mb-2">💼 สำรวจอาชีพสายงาน AI (AI Careers)</h2>
+      <p class="text-slate-600 text-sm mb-6">เรียนรู้บทบาท หน้าที่ และทักษะที่ต้องใช้สำหรับอาชีพแห่งอนาคต</p>
+      <div id="careers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+
+  </main>
+
+  <!-- Printable Certificate Modal Container -->
+  <div id="certificate-modal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+    <div id="certificate-modal-content" class="bg-white border-8 border-blue-900 p-8 md:p-12 rounded-2xl max-w-3xl w-full text-center relative shadow-2xl">
+      <div class="border-2 border-amber-500 p-6 md:p-8 rounded-xl bg-amber-50/20">
+        <p class="text-xs font-bold text-blue-900 tracking-widest uppercase">Thailand Education Digital Skills Academy</p>
+        <h2 class="font-bold text-3xl md:text-4xl text-blue-900 mt-2 mb-1">ใบประกาศนียบัตรเกียรติคุณ</h2>
+        <p class="text-xs text-slate-500 mb-6">CERTIFICATE OF AI LITERACY COMPLETION</p>
+        
+        <p class="text-sm text-slate-600">ขอมอบประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า</p>
+        <h3 class="font-bold text-2xl md:text-3xl text-slate-900 my-4 border-b-2 border-slate-300 inline-block pb-1 px-8" id="cert-name-display">
+          นักเรียนผู้ทรงปัญญา
+        </h3>
+        
+        <p class="text-sm text-slate-700 max-w-md mx-auto leading-relaxed">
+          ได้ผ่านการทดสอบหลักสูตรความรู้พื้นฐานปัญญาประดิษฐ์และจริยธรรมสมองกล (AI & Ethics Fundamentals) เป็นที่เรียบร้อยแล้ว
+        </p>
+
+        <div class="mt-8 flex justify-between items-end text-xs text-slate-600 px-4">
+          <div>
+            <p class="font-bold text-slate-800">วันที่อนุมัติ</p>
+            <p id="cert-date-display">14 สิงหาคม 2026</p>
+          </div>
+          <div class="w-20 h-20 bg-blue-600 rounded-full text-white font-bold flex flex-col items-center justify-center text-[10px] shadow-md">
+            <span>AI MENTOR</span>
+            <span class="text-base">PASSED</span>
+          </div>
+          <div>
+            <p class="font-bold text-slate-800">ออกโดย</p>
+            <p>AI Mentor TH Offline Edition</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-center gap-4 print:hidden">
+        <button onclick="window.print()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl">
+          🖨️ พิมพ์เกียรติบัตร (Print / PDF)
+        </button>
+        <button onclick="document.getElementById('certificate-modal').classList.add('hidden')" class="px-6 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm rounded-xl">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="bg-slate-100 border-t border-slate-200 py-8 px-4 md:px-8 mt-12">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+        <span class="font-bold text-slate-700">AI Mentor TH (Offline Portable Edition)</span>
+      </div>
+      <p>ออกแบบสำหรับเยาวชนและสถานศึกษา สามารถเปิดใช้งานได้ 100% โดยไม่ต้องเชื่อมต่ออินเทอร์เน็ต</p>
+      <p>© 2026 AI Mentor Thailand Education</p>
+    </div>
+  </footer>
+
+  <!-- Embedded Offline JavaScript App Engine -->
+  <script>
+    // Lessons Database
+    const LESSONS_DATA = {
+      'what-is-ai': {
+        title: '1. AI คืออะไร? (What is AI?)',
+        subtitle: 'ปูพื้นฐานความรู้ปัญญาประดิษฐ์ฉบับเข้าใจง่ายที่สุด',
+        content: `
+          <h3 class="text-xl font-bold mb-3 text-slate-900">ปัญญาประดิษฐ์คืออะไร?</h3>
+          <p class="text-slate-700 mb-4 leading-relaxed"><strong>Artificial Intelligence (AI)</strong> หรือ <strong>ปัญญาประดิษฐ์</strong> หมายถึง ระบบคอมพิวเตอร์หรือโปรแกรมที่ถูกสร้างขึ้นให้มีความสามารถในการคิด วิเคราะห์ เลียนแบบพฤติกรรม และการตัดสินใจคล้ายมนุษย์</p>
+          <div class="bg-blue-50 border border-blue-200 p-4 rounded-2xl mb-6">
+            <h4 class="font-bold text-blue-900 mb-1">💡 ตัวอย่าง AI ในชีวิตประจำวัน:</h4>
+            <ul class="list-disc list-inside text-sm text-slate-700 space-y-1">
+              <li>ระบบสแกนใบหน้าปลดล็อกโทรศัพท์ (Facial Recognition)</li>
+              <li>ระบบแนะนำเพลงและวิดีโอบน YouTube / Spotify</li>
+              <li>ผู้ช่วยเสียงอัจฉริยะ เช่น Siri, Google Assistant</li>
+              <li>ระบบแปลภาษาอัตโนมัติ Google Translate</li>
+            </ul>
+          </div>
+        `
+      },
+      'machine-learning': {
+        title: '2. การเรียนรู้ของเครื่อง (Machine Learning)',
+        subtitle: 'กลไกที่ทำให้คอมพิวเตอร์ฉลาดขึ้นด้วยข้อมูล',
+        content: `
+          <h3 class="text-xl font-bold mb-3 text-slate-900">Machine Learning (ML) ทำงานอย่างไร?</h3>
+          <p class="text-slate-700 mb-4 leading-relaxed">แทนที่เราจะเขียนคำสั่งสั่งคอมพิวเตอร์ทุกขั้นตอน ในระบบ <strong>Machine Learning</strong> เราจะป้อน "ข้อมูลตัวอย่าง (Dataset)" ปริมาณมาก เพื่อให้ระบบค้นหารูปแบบ (Pattern) และเรียนรู้กฎเกณฑ์ได้ด้วยตนเอง</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <h4 class="font-bold text-blue-700 text-sm mb-1">1. Supervised Learning</h4>
+              <p class="text-xs text-slate-600">สอนด้วยข้อมูลที่มีเฉลย เช่น ป้อนรูปแมวพร้อมติดป้ายบอกว่า "นี่คือแมว"</p>
+            </div>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <h4 class="font-bold text-green-700 text-sm mb-1">2. Unsupervised Learning</h4>
+              <p class="text-xs text-slate-600">ไม่มีเฉลย ให้ AI จัดกลุ่มข้อมูลตามลักษณะที่คล้ายกันเอง</p>
+            </div>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <h4 class="font-bold text-purple-700 text-sm mb-1">3. Reinforcement Learning</h4>
+              <p class="text-xs text-slate-600">เรียนรู้จากการลองผิดลองถูกผ่านระบบรางวัลและบทลงโทษ เช่น การฝึก AI เล่นเกม</p>
+            </div>
+          </div>
+        `
+      },
+      'generative-ai': {
+        title: '3. Generative AI & Prompt Engineering',
+        subtitle: 'เทคโนโลยีสร้างสรรค์ข้อความ ภาพ และคำสั่งทรงพลัง',
+        content: `
+          <h3 class="text-xl font-bold mb-3 text-slate-900">Generative AI คืออะไร?</h3>
+          <p class="text-slate-700 mb-4 leading-relaxed"><strong>Generative AI</strong> คือ ปัญญาประดิษฐ์ที่สามารถ "สร้างสรรค์ชิ้นงานใหม่" เช่น เขียนเรียงความ แต่งเพลง วาดรูป หรือเขียนโค้ด จากคำสั่งภาษาธรรมชาติของเรา</p>
+          <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl mb-6">
+            <h4 class="font-bold text-amber-900 mb-2">🎯 สูตรลับการเขียน Prompt ที่ดี (สูตร 4S):</h4>
+            <ol class="list-decimal list-inside text-sm text-slate-700 space-y-1">
+              <li><strong>State Role:</strong> กำหนดบทบาทให้ AI (เช่น "จงเป็นครูสอนวิชาคอมพิวเตอร์")</li>
+              <li><strong>Specify Task:</strong> ระบุงานให้ชัดเจน (เช่น "อธิบายเรื่องคลาวด์")</li>
+              <li><strong>Set Context:</strong> ให้บริบทแวดล้อม (เช่น "สำหรับนักเรียนชั้น ม.1")</li>
+              <li><strong>Shape Output:</strong> กำหนดรูปแบบคำตอบ (เช่น "เป็นข้อๆ 3 ข้อ ไม่เกิน 100 คำ")</li>
+            </ol>
+          </div>
+        `
+      },
+      'ai-ethics': {
+        title: '4. จริยธรรมและภัยคุกคาม AI',
+        subtitle: 'ตระหนักรู้การใช้งานอย่างปลอดภัยและรับผิดชอบ',
+        content: `
+          <h3 class="text-xl font-bold mb-3 text-slate-900">จริยธรรม AI (AI Ethics)</h3>
+          <p class="text-slate-700 mb-4 leading-relaxed">แม้ AI จะมีประโยชน์มหาศาล แต่หากใช้ไม่ถูกต้องอาจเกิดโทษได้ เช่น การตัดต่อภาพปลอม (Deepfake), ข้อมูลเท็จ (Hallucination) หรือ อคติของ AI (AI Bias)</p>
+          <div class="bg-red-50 border border-red-200 p-4 rounded-2xl mb-6">
+            <h4 class="font-bold text-red-900 mb-1">⚠️ สิ่งที่ต้องระวังในการใช้ AI:</h4>
+            <ul class="list-disc list-inside text-sm text-slate-700 space-y-1">
+              <li>อย่านำข้อมูลส่วนตัวรหัสผ่านหรือความลับอัปโหลดให้ AI</li>
+              <li>ตรวจสอบความถูกต้องของข้อมูลจาก AI ทุกครั้งก่อนนำไปใช้อ้างอิง</li>
+              <li>ห้ามใช้ AI คัดลอกผลงานหรือทุจริตการสอบ</li>
+            </ul>
+          </div>
+        `
+      }
+    };
+
+    // Dictionary Data
+    const DICT_DATA = [
+      { term: 'Algorithm', th: 'อัลกอริทึม', desc: 'ลำดับขั้นตอนคำสั่งทางคณิตศาสตร์ในการแก้ปัญหา' },
+      { term: 'Artificial Intelligence', th: 'ปัญญาประดิษฐ์', desc: 'การสร้างคอมพิวเตอร์ให้มีความฉลาดและคิดคำนวณคล้ายมนุษย์' },
+      { term: 'Machine Learning', th: 'การเรียนรู้ของเครื่อง', desc: 'สาขาหนึ่งของ AI ที่เน้นการเรียนรู้จากข้อมูลแทนการเขียนคำสั่งตรงๆ' },
+      { term: 'Neural Network', th: 'โครงข่ายประสาทเทียม', desc: 'แบบจำลองคอมพิวเตอร์ที่ได้รับแรงบันดาลใจจากเซลล์ประสาทในสมองมนุษย์' },
+      { term: 'Prompt', th: 'คำสั่งป้อน AI', desc: 'ข้อความหรือคำสั่งที่มนุษย์ป้อนให้ AI ประมวลผลและสร้างคำตอบ' },
+      { term: 'Deepfake', th: 'ภาพ/วิดีโอสังเคราะห์ปลอม', desc: 'เทคโนโลยี AI สังเคราะห์ใบหน้าและเสียงเพื่อดัดแปลงสื่อเสมือนจริง' }
+    ];
+
+    // Careers Data
+    const CAREERS_DATA = [
+      { title: 'Prompt Engineer', desc: 'ผู้เชี่ยวชาญการออกแบบและปรับแต่งคำสั่งให้ AI สร้างผลลัพธ์ที่ดีที่สุด', salary: '฿45,000 - ฿120,000', skills: ['ภาษาอังกฤษ', 'ตรรกะศาสตร์', 'การสื่อสาร'] },
+      { title: 'Machine Learning Engineer', desc: 'วิศวกรผู้พัฒนาและฝึกฝนโมเดลสมองกลอัจฉริยะ', salary: '฿60,000 - ฿180,000', skills: ['Python', 'คณิตศาสตร์', 'TensorFlow/PyTorch'] },
+      { title: 'Data Scientist', desc: 'นักวิทยาศาสตร์ข้อมูลผู้ค้นพบอินไซต์ลับจากข้อมูลมหาศาล', salary: '฿50,000 - ฿150,000', skills: ['SQL', 'สถิติศาสตร์', 'Data Visualization'] },
+      { title: 'AI Ethics Officer', desc: 'ผู้ตรวจสอบและควบคุมการใช้ AI ให้มีความปลอดภัยเป็นธรรมและถูกต้อง', salary: '฿55,000 - ฿140,000', skills: ['กฎหมายดิจิทัล', 'จริยธรรม', 'นโยบายเทคโนโลยี'] }
+    ];
+
+    // Quiz Questions Data
+    const QUIZ_QUESTIONS = [
+      { q: 'AI ย่อมาจากคำว่าอะไร?', options: ['Automated Internet', 'Artificial Intelligence', 'Apple Intelligence', 'Advanced Information'], ans: 1 },
+      { q: 'ข้อใดคือตัวอย่างของ Supervised Learning?', options: ['การสอน AI จำแนกภาพสุนัขโดยมีเฉลยกำกับ', 'การจัดกลุ่มลูกค้าโดยไม่มีเฉลย', 'การฝึก AI เดินในเขาวงกตผ่านคะแนนสะสม', 'การปิดเครื่องคอมพิวเตอร์'], ans: 0 },
+      { q: 'การเขียน Prompt ที่ดีตามหลัก 4S ควรระบุสิ่งใดเป็นอันดับแรก?', options: ['สีของหน้าจอ', 'State Role (กำหนดบทบาท)', 'ราคาคอมพิวเตอร์', 'การตั้งรหัสผ่าน'], ans: 1 },
+      { q: 'ข้อใดคือความเสี่ยงของเทคโนโลยี Deepfake?', options: ['คอมพิวเตอร์ทำงานเร็วขึ้น', 'การปลอมแปลงใบหน้าและเสียงเพื่อหลอกลวง', 'แบตเตอรี่หมดไว', 'ความเร็วเน็ตช้าลง'], ans: 1 },
+      { q: 'ข้อใดเป็นสิ่งที่ "ไม่ควรทำ" เมื่อใช้งาน AI Chatbot?', options: ['ตรวจสอบความถูกต้องของข้อมูล', 'ป้อนเลขบัตรประชาชนและรหัสผ่านส่วนตัว', 'ใช้ AI ช่วยระดมความคิด', 'สั่งให้ช่วยสรุปบทความยาวๆ'], ans: 1 }
+    ];
+
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+
+    // Navigation Switcher
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-link').forEach(el => {
+        el.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'font-bold');
+        el.classList.add('text-slate-600');
+      });
+
+      const activeBtn = document.getElementById('nav-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'font-bold');
+        activeBtn.classList.remove('text-slate-600');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Select Lesson
+    function selectLesson(id) {
+      const lesson = LESSONS_DATA[id];
+      if (!lesson) return;
+
+      document.querySelectorAll('.lesson-item-btn').forEach(el => {
+        el.classList.remove('border-blue-600', 'bg-blue-50', 'text-blue-900', 'font-bold');
+        el.classList.add('border-slate-200');
+      });
+
+      const btn = document.getElementById('lesson-btn-' + id);
+      if (btn) {
+        btn.classList.add('border-blue-600', 'bg-blue-50', 'text-blue-900', 'font-bold');
+        btn.classList.remove('border-slate-200');
+      }
+
+      document.getElementById('lesson-content-area').innerHTML = `
+        <span class="text-xs uppercase font-bold text-blue-600 tracking-wider">บทเรียนออนไลน์</span>
+        <h2 class="text-3xl font-extrabold text-slate-900 mt-1 mb-2">${lesson.title}</h2>
+        <p class="text-slate-500 text-sm mb-6 border-b border-slate-100 pb-4">${lesson.subtitle}</p>
+        <div>${lesson.content}</div>
+      `;
+    }
+
+    // Daily Facts Array
+    const FACTS = [
+      "ระบบแนะนำวิดีโอบน YouTube และฟีดบน TikTok ใช้ AI ประมวลผลพฤติกรรมผู้ใช้มากกว่า 1 พันล้านครั้งต่อวัน!",
+      "คำว่า Artificial Intelligence ถูกคิดค้นขึ้นครั้งแรกในปี ค.ศ. 1956 โดย John McCarthy ในการประชุม Dartmouth Conference",
+      "โมเดลภาษาขนาดใหญ่ (LLM) เรียนรู้ด้วยการทำนายคำถัดไป (Next-token Prediction) จากคลังข้อมูลนับล้านล้านตัวอักษร",
+      "การเขียน Prompt ที่ชัดเจนและมีโครงสร้างที่ดี สามารถเพิ่มคุณภาพคำตอบของ AI ได้มากกว่า 40%"
+    ];
+    let factIdx = 0;
+    function nextDailyFact() {
+      factIdx = (factIdx + 1) % FACTS.length;
+      document.getElementById('daily-fact-text').innerText = FACTS[factIdx];
+    }
+
+    // Offline Prompt Evaluator
+    function evaluatePromptOffline() {
+      const p = document.getElementById('prompt-input').value.trim();
+      const resBox = document.getElementById('prompt-result');
+      if (!p) {
+        alert('กรุณาพิมพ์ข้อความคำสั่งก่อนวิเคราะห์จ้ะ');
+        return;
+      }
+      const score = Math.min(100, Math.max(35, p.length * 4 + 20));
+      resBox.classList.remove('hidden');
+      resBox.innerHTML = `
+        <div class="flex justify-between items-center font-bold text-slate-800">
+          <span>คะแนนประสิทธิภาพ:</span>
+          <span class="text-lg text-blue-600">${score} / 100</span>
+        </div>
+        <p><strong>จุดเด่น:</strong> ${p.length > 20 ? 'มีความยาวและระบุรายละเอียดชัดเจนดี' : 'สั้นกระชับจดจำง่าย'}</p>
+        <p><strong>คำแนะนำปรับปรุง:</strong> เพิ่มบทบาท Role และกำหนดรูปแบบคำตอบ (Format) เช่น ให้สรุปเป็น 3 ข้อ</p>
+        <div class="p-2 bg-blue-50 rounded border border-blue-200 mt-1">
+          <strong>คำสั่งฉบับปรับปรุงแนะนำ:</strong><br>
+          "จงรับบทเป็นครูใจดี ช่วยอธิบายเรื่อง '${p}' ให้เด็กประถมฟังเข้าใจง่าย สรุปเป็น 3 ข้อ"
+        </div>
+      `;
+    }
+
+    // Offline Sentiment Analysis
+    function analyzeSentimentOffline() {
+      const txt = document.getElementById('sentiment-input').value.trim();
+      const resBox = document.getElementById('sentiment-result');
+      if (!txt) return alert('กรุณาพิมพ์ข้อความก่อนวิเคราะห์จ้ะ');
+
+      let sentiment = "เป็นกลาง (Neutral)";
+      let emoji = "😐";
+      let color = "text-slate-700";
+      const lower = txt.toLowerCase();
+
+      if (lower.includes('ดี') || lower.includes('ชอบ') || lower.includes('สนุก') || lower.includes('เจ๋ง') || lower.includes('เก่ง') || lower.includes('รัก')) {
+        sentiment = "บวก (Positive)";
+        emoji = "😊";
+        color = "text-green-600";
+      } else if (lower.includes('แย่') || lower.includes('เศร้า') || lower.includes('เกลียด') || lower.includes('โง่') || lower.includes('เบื่อ')) {
+        sentiment = "ลบ (Negative)";
+        emoji = "😢";
+        color = "text-red-600";
+      }
+
+      resBox.classList.remove('hidden');
+      resBox.innerHTML = `
+        <div class="flex items-center gap-2 font-bold ${color} text-sm">
+          <span class="text-2xl">${emoji}</span>
+          <span>ผลวิเคราะห์อารมณ์: ${sentiment}</span>
+        </div>
+        <p class="text-slate-600 mt-1">ระบบ AI ตรวจพบคำสำคัญสื่ออารมณ์ และประเมินความสอดคล้องเชิงความรู้สึกของข้อความ</p>
+      `;
+    }
+
+    // Offline Chatbot Engine
+    function sendOfflineMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('chat-box');
+      // User message
+      chatBox.innerHTML += `
+        <div class="bg-slate-100 text-slate-800 p-3 rounded-xl max-w-md self-end border border-slate-200">
+          ${text}
+        </div>
+      `;
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // AI Response Matcher
+      setTimeout(() => {
+        let reply = "เรื่องที่ถามนั้นน่าสนใจมากๆ เลยจ้ะ! ปัญญาประดิษฐ์กำลังพัฒนาอย่างรวดเร็ว เธออยากรู้เรื่องการเขียน Prompt หรือการทำงานของ Machine Learning เพิ่มเติมไหมจ้ะ?";
+        const lower = text.toLowerCase();
+        if (lower.includes('ai') || lower.includes('คืออะไร')) {
+          reply = "AI หรือปัญญาประดิษฐ์ คือโปรแกรมคอมพิวเตอร์ที่ถูกฝึกฝนให้มีความคิด การตัดสินใจ และการแก้ไขปัญหาคล้ายกับสมองมนุษย์จ้ะ!";
+        } else if (lower.includes('ml') || lower.includes('machine learning') || lower.includes('เรียนรู้')) {
+          reply = "Machine Learning คือการป้อนข้อมูลตัวอย่างเยอะๆ ให้คอมพิวเตอร์หาแก่นและสร้างกฎการคาดเดาด้วยตัวเองจ้ะ";
+        } else if (lower.includes('prompt') || lower.includes('คำสั่ง')) {
+          reply = "การเขียน Prompt ที่ดีลองใช้สูตร 4S นะจ้ะ: 1. State Role 2. Specify Task 3. Set Context 4. Shape Output";
+        } else if (lower.includes('อาชีพ') || lower.includes('งาน')) {
+          reply = "สายงาน AI กำลังฮอตมากๆ จ้ะ เช่น Prompt Engineer, Machine Learning Engineer และ Data Scientist!";
+        }
+
+        chatBox.innerHTML += `
+          <div class="bg-blue-50 text-blue-900 p-3 rounded-xl max-w-md self-start border border-blue-100">
+            🤖 <strong>AI Mentor:</strong> ${reply}
+          </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 300);
+    }
+
+    // Quiz Functions
+    function startQuiz() {
+      currentQuizIndex = 0;
+      quizScore = 0;
+      document.getElementById('quiz-intro').classList.add('hidden');
+      document.getElementById('quiz-result').classList.add('hidden');
+      document.getElementById('quiz-active').classList.remove('hidden');
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      const q = QUIZ_QUESTIONS[currentQuizIndex];
+      document.getElementById('quiz-progress-text').innerText = `ข้อที่ ${currentQuizIndex + 1} / ${QUIZ_QUESTIONS.length}`;
+      document.getElementById('quiz-score-live').innerText = `คะแนน: ${quizScore}`;
+      document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIndex + 1) / QUIZ_QUESTIONS.length) * 100}%`;
+      document.getElementById('quiz-question-title').innerText = `${currentQuizIndex + 1}. ${q.q}`;
+
+      const optionsDiv = document.getElementById('quiz-options-container');
+      optionsDiv.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full p-4 rounded-xl border border-slate-200 text-left hover:border-blue-600 hover:bg-blue-50 font-medium transition-all text-sm';
+        btn.innerText = opt;
+        btn.onclick = () => selectQuizAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function selectQuizAnswer(optIdx) {
+      if (optIdx === QUIZ_QUESTIONS[currentQuizIndex].ans) {
+        quizScore += 20;
+      }
+      currentQuizIndex++;
+      if (currentQuizIndex < QUIZ_QUESTIONS.length) {
+        renderQuizQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function finishQuiz() {
+      document.getElementById('quiz-active').classList.add('hidden');
+      document.getElementById('quiz-result').classList.remove('hidden');
+
+      const pass = quizScore >= 60;
+      document.getElementById('quiz-result-heading').innerText = pass ? 'ยินดีด้วย! สอบผ่านเกณฑ์' : 'พยายามได้ดีมาก!';
+      document.getElementById('quiz-result-detail').innerText = `คุณทำได้ ${quizScore} จาก 100 คะแนน ${pass ? 'รับเกียรติบัตรรับรองความรู้ได้เลย!' : 'ลองทบทวนบทเรียนอีกครั้งแล้วทำใหม่นะ'}`;
+      document.getElementById('btn-cert').style.display = pass ? 'inline-block' : 'none';
+    }
+
+    function printCertificate() {
+      const name = document.getElementById('student-name').value || 'นักเรียนผู้ทรงปัญญา';
+      document.getElementById('cert-name-display').innerText = name;
+      document.getElementById('cert-date-display').innerText = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('certificate-modal').classList.remove('hidden');
+    }
+
+    // Ethics Scenarios
+    function renderEthics() {
+      const scenarios = [
+        { title: '1. ภาพสังเคราะห์ Deepfake', desc: 'เพื่อนนำรูปของคุณไปตัดต่อ AI ให้กลายเป็นตลกและโพสต์ลงโซเชียล', choiceA: 'หัวเราะตามและไม่สนใจ', choiceB: 'แจ้งเตือนเพื่อนว่าการสร้าง Deepfake ผิดจริยธรรมและส่งผลกระทบต่อผู้อื่น', resB: 'ถูกต้อง! การตระหนักถึงผลกระทบทางสังคมของ Deepfake เป็นหัวใจหลักของจริยธรรมดิจิทัล' },
+        { title: '2. การทุจริตข้อสอบด้วย AI', desc: 'คุณกำลังทำข้อสอบออนไลน์ และคิดจะใช้ AI ตอบคำถามทุกข้อโดยไม่คิดเอง', choiceA: 'ใช้ AI คัดลอกคำตอบทั้งหมด', choiceB: 'คิดและเขียนคำตอบด้วยตนเองเพื่อฝึกความรู้', resB: 'ยอดเยี่ยม! AI ควรใช้เป็นผู้ช่วยในการเรียนรู้ ไม่ใช่เครื่องมือทุจริต' }
+      ];
+
+      const container = document.getElementById('ethics-container');
+      container.innerHTML = '';
+      scenarios.forEach((s) => {
+        container.innerHTML += `
+          <div class="p-6 border border-slate-200 rounded-2xl bg-slate-50 flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold text-lg text-slate-900 mb-2">${s.title}</h3>
+              <p class="text-xs text-slate-600 mb-4">${s.desc}</p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <button onclick="alert('ทางเลือกนี้อาจเสี่ยงต่อการละเมิดจริยธรรมดิจิทัล')" class="p-3 bg-white border border-slate-300 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100">${s.choiceA}</button>
+              <button onclick="alert('${s.resB}')" class="p-3 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700">${s.choiceB}</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Render Dictionary
+    function renderDict(items = DICT_DATA) {
+      const grid = document.getElementById('dict-grid');
+      grid.innerHTML = '';
+      items.forEach(d => {
+        grid.innerHTML += `
+          <div class="p-4 border border-slate-200 rounded-2xl bg-slate-50">
+            <h4 class="font-bold text-blue-700 text-base">${d.term}</h4>
+            <p class="text-xs font-bold text-slate-500 mb-2">${d.th}</p>
+            <p class="text-xs text-slate-600 leading-relaxed">${d.desc}</p>
+          </div>
+        `;
+      });
+    }
+
+    function filterDict() {
+      const q = document.getElementById('dict-search').value.toLowerCase();
+      const filtered = DICT_DATA.filter(d => d.term.toLowerCase().includes(q) || d.th.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q));
+      renderDict(filtered);
+    }
+
+    // Render Careers
+    function renderCareers() {
+      const grid = document.getElementById('careers-grid');
+      grid.innerHTML = '';
+      CAREERS_DATA.forEach(c => {
+        grid.innerHTML += `
+          <div class="p-6 border border-slate-200 rounded-2xl bg-slate-50 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-lg text-slate-900">${c.title}</h3>
+                <span class="text-xs bg-green-100 text-green-700 font-bold px-2.5 py-1 rounded-full">${c.salary}</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-4">${c.desc}</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-500 uppercase mb-2">ทักษะสำคัญที่ต้องเรียนรู้:</p>
+              <div class="flex flex-wrap gap-1.5">
+                ${c.skills.map(s => `<span class="px-2 py-0.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700">${s}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Initialize App
+    window.onload = function() {
+      selectLesson('what-is-ai');
+      renderEthics();
+      renderDict();
+      renderCareers();
+    };
+  </script>
+</body>
+</html>
