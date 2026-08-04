@@ -1,0 +1,6 @@
+{
+  "name": "AI Mentor TH",
+  "description": "เว็บไซต์ความรู้และสนามเด็กเล่น AI สำหรับนักเรียน เพื่อเรียนรู้และทดลองใช้งาน AI อย่างสร้างสรรค์และปลอดภัย",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
