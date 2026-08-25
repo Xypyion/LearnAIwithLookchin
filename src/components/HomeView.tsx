@@ -14,8 +14,7 @@ import {
   History,
   TrendingUp,
   MapPin,
-  MessageSquare,
-  Download
+  MessageSquare
 } from "lucide-react";
 import { UserProfile } from "../types";
 import { LESSONS } from "../data/lessons";
@@ -190,78 +189,6 @@ export default function HomeView({ setCurrentTab, setSelectedLessonId, userProfi
               <h3 className="font-heading font-bold text-lg text-white">เรียนต่อเนื่อง</h3>
               <p className="text-xs text-white/80 mt-1">เข้าสู่บทเรียนปัจจุบันของเธอ</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Offline Portable Website & Single-Page Download Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-indigo-950 text-white rounded-3xl p-6 md:p-10 shadow-lg border border-blue-800 flex flex-col gap-6" id="offline-download-section">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full font-bold text-xs border border-blue-400/30">
-              <Download className="w-3.5 h-3.5" />
-              Portable Offline Distribution
-            </span>
-            <h2 className="font-heading text-2xl md:text-3xl font-extrabold text-white mt-2">
-              ดาวน์โหลดสื่อการเรียนรู้แบบ Offline พกพาไปใช้ได้ทุกที่
-            </h2>
-            <p className="text-xs md:text-sm text-blue-200 mt-1 max-w-2xl leading-relaxed">
-              สำหรับโรงเรียน คณะครู และนักเรียนที่ต้องการใช้งานในห้องเรียนคอมพิวเตอร์ หรือพื้นที่ไร้สัญญาณอินเทอร์เน็ต
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Card 1: Node.js Portable ZIP */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 flex flex-col justify-between gap-4">
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-bold text-base text-white flex items-center gap-2">
-                  📦 1. Portable Node.js Server (ZIP)
-                </span>
-                <span className="text-[10px] bg-blue-500/30 text-blue-200 font-bold px-2 py-0.5 rounded-full border border-blue-400/30">
-                  Node.js App
-                </span>
-              </div>
-              <p className="text-xs text-slate-200 leading-relaxed">
-                ไฟล์ ZIP รันเว็บไซต์ฉบับเต็มผ่าน Node.js ในเครื่อง ดับเบิลคลิก <code className="bg-black/30 px-1.5 py-0.5 rounded text-amber-300">start.bat</code> (Windows) หรือ <code className="bg-black/30 px-1.5 py-0.5 rounded text-amber-300">start.sh</code> (Mac/Linux) เพื่อเปิดใช้งานแบบเต็มระบบ!
-              </p>
-            </div>
-            <a
-              href="/ai-mentor-th-offline.zip"
-              download="ai-mentor-th-offline.zip"
-              className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs rounded-xl text-center shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Download className="w-4 h-4" />
-              ดาวน์โหลด ai-mentor-th-offline.zip (Node.js)
-            </a>
-          </div>
-
-          {/* Card 2: Standalone Single HTML File */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 flex flex-col justify-between gap-4">
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-bold text-base text-white flex items-center gap-2">
-                  🌐 2. Standalone Single HTML Page
-                </span>
-                <span className="text-[10px] bg-green-500/30 text-green-200 font-bold px-2 py-0.5 rounded-full border border-green-400/30">
-                  Single File HTML
-                </span>
-              </div>
-              <p className="text-xs text-slate-200 leading-relaxed">
-                ไฟล์ HTML เดี่ยวเปิดใช้งานได้ทันทีบนเว็บเบราว์เซอร์ทุกชนิด โดยไม่ต้องติดตั้งโปรแกรมหรือ Server เพิ่มเติม ดับเบิลคลิกเปิดไฟล์เพื่อเรียนรู้และทำควิซออฟไลน์ได้ 100%!
-              </p>
-            </div>
-            <a
-              href="/standalone.html"
-              download="ai-mentor-th-standalone.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-3 bg-white text-slate-900 hover:bg-slate-100 font-bold text-xs rounded-xl text-center shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Download className="w-4 h-4 text-slate-900" />
-              ดาวน์โหลด/เปิด standalone.html (Single Page)
-            </a>
           </div>
         </div>
       </section>
