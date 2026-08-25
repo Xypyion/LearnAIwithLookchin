@@ -31,6 +31,7 @@ export default function Header({
     { id: "quiz", label: "ควิซ" },
     { id: "playground", label: "สนามเด็กเล่น" },
     { id: "ethics", label: "จริยธรรม AI" },
+    { id: "about", label: "เกี่ยวกับผู้จัดทำ" },
   ];
 
   return (

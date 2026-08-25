@@ -8,13 +8,20 @@ import EthicsSimulator from "./components/EthicsSimulator";
 import CareerExplorer from "./components/CareerExplorer";
 import Dictionary from "./components/Dictionary";
 import NewsSection from "./components/NewsSection";
+import About from "./components/About";
 import { UserProfile } from "./types";
 import { BookOpen, Newspaper, Briefcase, Award } from "lucide-react";
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>("home");
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const savedTheme = localStorage.getItem("ai_mentor_theme");
+    if (savedTheme !== null) {
+      return savedTheme === "dark";
+    }
+    return false; // Default to Light Mode
+  });
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Initialize gamified user profile
@@ -43,12 +50,14 @@ export default function App() {
     localStorage.setItem("ai_mentor_profile", JSON.stringify(userProfile));
   }, [userProfile]);
 
-  // Sync dark mode class to HTML
+  // Sync dark mode class to HTML and persist in storage
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
+      localStorage.setItem("ai_mentor_theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
+      localStorage.setItem("ai_mentor_theme", "light");
     }
   }, [darkMode]);
 
@@ -153,6 +162,8 @@ export default function App() {
         {currentTab === "dictionary" && <Dictionary />}
 
         {currentTab === "news" && <NewsSection />}
+
+        {currentTab === "about" && <About />}
       </main>
 
       {/* Footer Navigation Section */}
